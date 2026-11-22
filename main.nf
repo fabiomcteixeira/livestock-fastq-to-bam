@@ -16,6 +16,7 @@ process NORMALIZE_LB {
 }
 
 process MAP {
+    tag "$animal/$id"
     cpus 16
     memory '48 GB'
     publishDir { "${params.outdir}/04_mapping/${id}" }, mode: 'symlink', overwrite: true, failOnError: true
@@ -60,6 +61,7 @@ process MERGE_RUNS {
 }
 
 process DEDUP {
+    tag "$id"
     cpus 4
     memory '64 GB'
     publishDir { "${params.outdir}/05_duplicates/${id}" }, mode: 'symlink', overwrite: true, failOnError: true
@@ -86,6 +88,7 @@ process DEDUP {
 }
 
 process TRIM {
+    tag "$animal/$id"
     cpus 8
     memory '16 GB'
     publishDir { "${params.outdir}/02_trim/${id}" }, mode: 'symlink', overwrite: true, failOnError: true
