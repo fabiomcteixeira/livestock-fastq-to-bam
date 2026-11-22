@@ -1,0 +1,25 @@
+# Local settings and inputs
+settings.env
+samples.tsv
+samples_runs.tsv
+*.local.config
+# Nextflow and analysis outputs
+.nextflow*
+work/
+results/
+provenance/
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bam
+*.bai
+*.cram
+*.crai
+*.vcf*
+*.sif
+*.log
+__pycache__/
+*.pyc
+.DS_Store
+._*

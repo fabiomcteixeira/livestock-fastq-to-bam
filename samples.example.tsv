@@ -1,0 +1,4 @@
+animal_id	run	library_id	header_format	R1	R2
+ANIMAL01	RUN001	ANIMAL01_LIB1	standard	/absolute/path/RUN001_R1.fastq.gz	/absolute/path/RUN001_R2.fastq.gz
+ANIMAL01	RUN002	ANIMAL01_LIB1	standard	/absolute/path/RUN002_R1.fastq.gz	/absolute/path/RUN002_R2.fastq.gz
+ANIMAL02	RUN003	ANIMAL02_LIB1	standard	/absolute/path/RUN003_R1.fastq.gz	/absolute/path/RUN003_R2.fastq.gz
