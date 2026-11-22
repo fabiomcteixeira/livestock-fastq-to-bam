@@ -55,3 +55,18 @@ The launcher records configuration snapshots, the validated manifest, adapter in
 ## License
 
 A distribution license has not yet been selected. Third-party tools retain their own licenses.
+
+## Sample sheet
+
+The input is a tab-separated file with one row per sequencing run:
+
+| Column | Meaning |
+| --- | --- |
+| animal_id | Biological sample identifier; shared across runs from the same animal |
+| run | Unique sequencing run identifier |
+| library_id | Library identifier; shared only across runs from the same physical library |
+| header_format | `standard`, or `hash_mate` for the supported special read-header format |
+| R1 | Absolute path to the forward FASTQ file |
+| R2 | Absolute path to the reverse FASTQ file |
+
+See `samples.example.tsv` for an example.
