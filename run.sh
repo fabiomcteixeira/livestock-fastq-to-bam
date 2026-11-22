@@ -27,9 +27,38 @@ module list > "$SNAP/controller_modules.txt" 2>&1
 nextflow -version > "$SNAP/nextflow_version.txt"
 printf '%s\n' "$COMBINED" > "$SNAP/combined_adapters_path.txt"
 printf '%q ' "$@" > "$SNAP/arguments.txt"
-exec nextflow run main.nf -c nextflow.config -profile slurm -ansi-log false \
-    -with-trace "$SNAP/trace.tsv" -with-report "$SNAP/report.html" -with-timeline "$SNAP/timeline.html" \
-    --reference "$REFERENCE" --account "$SLURM_ACCOUNT" --partition "$SLURM_PARTITION" \
-    --manifest "$PWD/provenance/samples_runs.checked.tsv" \
-    --adapters "$ADAPTERS_BASE" --combined_adapters "$COMBINED" \
-    --approvals "$SNAP/approved_raw_adapter_runs.txt" --trim_overrides "$SNAP/trim_overrides.tsv" "$@"
+NEXTFLOW_EXIT=0
+
+nextflow run main.nf -c nextflow.config -profile slurm -ansi-log false \
+    -with-trace "$SNAP/trace.tsv" \
+    -with-report "$SNAP/report.html" \
+    -with-timeline "$SNAP/timeline.html" \
+    --reference "$REFERENCE" \
+    --account "$SLURM_ACCOUNT" \
+    --partition "$SLURM_PARTITION" \
+    --manifest "$SNAP/samples_runs.tsv" \
+    --adapters "$ADAPTERS_BASE" \
+    --combined_adapters "$COMBINED" \
+    --approvals "$SNAP/approved_raw_adapter_runs.txt" \
+    --trim_overrides "$SNAP/trim_overrides.tsv" \
+    "$@" || NEXTFLOW_EXIT=$?
+
+printf '%s\n' "$NEXTFLOW_EXIT" > "$SNAP/nextflow_exit_code.txt"
+
+printf '\nNextflow exit code: %s\n' "$NEXTFLOW_EXIT"
+printf 'Execution records: %s\n' "$SNAP"
+SUMMARY_EXIT=0
+
+python3 "$SNAP/bin/summarize_execution.py" \
+    "$SNAP/samples_runs.tsv" \
+    "$SNAP/trace.tsv" \
+    "$SNAP/execution_summary" || SUMMARY_EXIT=$?
+
+if [[ "$SUMMARY_EXIT" -ne 0 ]]; then
+    printf 'ERROR: execution summary failed (exit %s)\n' \
+        "$SUMMARY_EXIT" >&2
+    if [[ "$NEXTFLOW_EXIT" -eq 0 ]]; then
+        NEXTFLOW_EXIT="$SUMMARY_EXIT"
+    fi
+fi
+exit "$NEXTFLOW_EXIT"
